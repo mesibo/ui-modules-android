@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.application'
+}
+
+apply from: "https://api.mesibo.com/mesibo.gradle"
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "com.mesibo.calls.app"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation "com.android.support:appcompat-v7:${project.Mesibo_supportLibVersion}"
+    implementation "com.android.support:support-v4:${project.Mesibo_supportLibVersion}"
+    implementation "com.android.support:design:${project.Mesibo_supportLibVersion}"
+  //  implementation "com.android.support.constraint:constraint-layout:${project.constraintLayoutVersion}"
+
+    implementation "com.intuit.sdp:sdp-android:1.0.6"
+
+//    implementation "com.mesibo.api:webrtc:${project.MesiboBuildVersion_Webrtc}"
+
+    implementation "com.mesibo.api:mesibo:${project.MesiboVersion_Api}"
+
+    implementation "com.mesibo.api:calls:${project.MesiboVersion_Calls}"
+
+
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+
+}

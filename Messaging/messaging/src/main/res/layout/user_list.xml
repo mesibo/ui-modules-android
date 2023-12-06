@@ -1,0 +1,157 @@
+<RelativeLayout
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mes_rv_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   >
+
+    <RelativeLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:gravity="center"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/mes_rv_profile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mesibo Username"
+            android:id="@+id/mes_rv_name"
+            android:layout_toLeftOf="@+id/mes_rv_date"
+            android:textSize="16sp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/mes_rv_profile"
+            android:textColor="#505050"
+            android:paddingTop="0dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="22 minutes"
+            android:id="@+id/mes_rv_date"
+            android:layout_alignTop="@id/mes_rv_name"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="#868686"
+            android:textSize="12dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_below="@+id/mes_rv_name"
+            android:layout_alignLeft="@+id/mes_rv_name"
+            android:layout_alignStart="@+id/mes_rv_name"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="4dp"
+            android:weightSum="3"
+         >
+
+            <!-- this needs to be removed and replaced by spannable text if we do maxLines=2, else outgoing messages alignment looks different -->
+            <ImageView
+                android:id="@+id/mes_cont_status"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="3dp"
+                android:layout_gravity="top|left"
+                android:visibility="visible"
+                android:src="@drawable/ic_done_black_18dp"/>
+
+            <!-- we have changed maxLines from 2 to 1 as height of rows are becoming uneven -->
+            <com.mesibo.emojiview.EmojiconTextView
+                android:id="@+id/mes_cont_post_or_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="This is a long message which will cover two lines, thanks"
+                android:textStyle="normal"
+                android:textSize="14sp"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="false"
+                android:textColor="#868686"
+                android:visibility="visible"
+                card_view:emojiconSize="16sp"
+                android:layout_weight="3"
+                />
+
+            <TextView
+                android:id="@+id/mes_alert"
+                android:layout_height="25dp"
+                android:layout_width="25dp"
+                android:text="99"
+                android:layout_marginRight="6dp"
+                android:layout_marginLeft="0dp"
+
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:maxLines="1"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/new_message_alert_bg"
+                android:textColor="#fff"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#e3e3e3"
+        />
+
+    <RelativeLayout
+        android:id="@+id/highlighted_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#10000000"
+        android:layout_alignBottom="@+id/top_layout"
+        android:layout_alignTop="@+id/top_layout"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:tint="@color/md_teal_700"
+            android:src="@drawable/ic_check_circle_black_24dp"
+
+            />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
+

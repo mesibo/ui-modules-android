@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+ <item
+     android:id="@+id/deleteItem"
+     android:orderInCategory="100"
+     android:icon="@drawable/ic_action_delete"
+     android:title="delete"
+     app:showAsAction="always" />
+
+    <item
+        android:id="@+id/removeFromCallLog"
+        android:orderInCategory="100"
+        android:title="Remove from call log"
+        app:showAsAction="never" />
+
+
+
+
+</menu>

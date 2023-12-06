@@ -1,0 +1,59 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply from: "../../buildscripts/module.gradle"
+
+// ext is a gradle closure allowing the declaration of global properties
+ext {
+    PUBLISH_GROUP_ID = 'com.mesibo.api'
+    PUBLISH_ARTIFACT_ID = 'uihelper'
+    PUBLISH_ARTIFACT_MAVENID = 'UIHelper'
+    PUBLISH_VERSION = "${project.MesiboBuildVersion_UiHelper}"
+}
+
+def getBuildDate() {
+    new Date().format('yyyyMMddHHmmss')
+}
+
+android {
+
+    defaultConfig {
+        minSdkVersion "${project.minSdkVersion}"
+        targetSdkVersion "${project.targetSdkVersion}"
+        versionCode 1
+        versionName "${project.MesiboBuildVersion_UiHelper}"
+        buildConfigField "String", "BUILD_VERSION", "\"${project.PUBLISH_VERSION}\""
+        buildConfigField("String", "BUILD_TIMESTAMP", "\"${getBuildDate()}\"")
+    }
+
+    buildTypes {
+        release {
+            debuggable true
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.android.support:appcompat-v7:${project.supportLibVersion}"
+    implementation "com.android.support:support-v4:${project.supportLibVersion}"
+    implementation "com.android.support:support-annotations:${project.supportLibVersion}"
+    implementation "com.android.support:design:${project.supportLibVersion}"
+    implementation "com.google.android.gms:play-services-auth:${project.playAuthApiVersion}"
+
+    implementation "com.mesibo.api:ContactUtils:${project.MesiboBuildVersion_ContactUtils}"
+
+    implementation 'com.facebook.android:account-kit-sdk:4.+'
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+
+
+    testImplementation 'junit:junit:4.12'
+
+    //compile 'com.jakewharton:butterknife:7.0.1'
+}
+
+repositories {
+    mavenCentral()
+
+}
+

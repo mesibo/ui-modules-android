@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mesibo.uihelper"
+    >
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" android:required="false" />
+
+    <application>
+
+        <activity android:name=".LoginActivity"
+            android:theme="@style/WelcomeTheme"
+            ></activity>
+
+        <activity android:name=".ProductTourActivity"
+            android:theme="@style/WelcomeTheme"
+            android:screenOrientation="portrait"
+            ></activity>
+
+    </application>
+
+</manifest>

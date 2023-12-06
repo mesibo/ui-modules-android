@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mesibo.calls.ui">
+
+    <application>
+    <activity
+        android:theme="@style/Theme.MesiboCallActivityLight"
+        android:name="com.mesibo.calls.ui.CallActivity"
+        android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"
+        android:windowSoftInputMode="stateAlwaysHidden"
+        android:windowActionBar="false"
+        android:windowFullscreen="true"
+        android:windowNoTitle="true"
+        />
+
+        <activity
+            android:name="com.mesibo.calls.ui.CallLogs.CallLogsActivity"
+            android:theme="@style/CallLogsActivityTheme"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
+
+        <activity
+            android:theme="@style/CallLogsDetailsActivityTheme"
+            android:name="com.mesibo.calls.ui.CallLogs.CallLogsDetailsActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
+    </application>
+</manifest>

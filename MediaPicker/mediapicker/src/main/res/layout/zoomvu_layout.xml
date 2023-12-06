@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/black"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.mesibo.mediapicker.ImageViewTouch
+
+        android:id="@+id/imageViewz"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        android:background="@android:color/black"
+        android:scaleType="matrix" >
+    </com.mesibo.mediapicker.ImageViewTouch>
+
+    <LinearLayout
+        android:id="@+id/video_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_overlay"
+        android:visibility="visible"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:src="@drawable/ic_play_circle_outline_black_48dp"
+            android:tint="@android:color/white"
+            android:layout_gravity="center"
+
+
+            />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

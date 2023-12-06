@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/incoming_layout_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="60dp"
+        android:paddingLeft="11dp"
+        android:paddingBottom="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="6dp"
+        android:layout_alignParentLeft="true"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/m_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="James Bond"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="-5dp"
+                android:layout_marginTop="2dp"
+                android:textColor="#dedede"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:visibility="visible"
+
+                />
+            <com.mesibo.messaging.MessageView
+                android:id="@+id/mesibo_message_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="100dp"
+            android:paddingBottom="0dp"
+                android:layout_marginBottom="7dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom|right"
+            android:paddingRight="4dp"
+            android:paddingLeft="5dp"
+            android:paddingBottom="0dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="5dp"
+            >
+
+            <ImageView
+                android:id="@+id/m_star"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="bottom"
+                android:paddingBottom="0dp"
+                android:layout_marginRight="1dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_star_black_18dp"/>
+            <TextView
+                android:id="@+id/m_time"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="4dp"
+                android:text="11:15"
+                style="@style/chat_timings"/>
+            <ImageView
+                android:id="@+id/m_status"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="bottom"
+                android:tint="#777777"
+                android:paddingBottom="1dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_lock_black_18dp"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <View
+        android:id="@+id/selected_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_alignParentTop="true"
+        android:background="@color/overlaySelection"
+        android:visibility="gone"
+        android:layout_alignBottom="@+id/incoming_layout_bubble" />
+
+</RelativeLayout>

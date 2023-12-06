@@ -1,0 +1,75 @@
+<LinearLayout
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:minHeight="60dp"
+>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff">
+
+        <ImageView
+            android:id="@+id/profile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/sample"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:layout_margin="10dp"
+        />
+
+        <ProgressBar
+            android:id="@+id/al_progress"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:orientation ="vertical"
+            android:layout_toRightOf="@+id/profile"
+            android:layout_toEndOf="@+id/profile">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Album name"
+                android:textColor="#707070"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:id="@+id/album_name"
+                android:visibility="visible"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="10 pictures"
+                android:id="@+id/album_count"
+                android:visibility="visible"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="#ffd3d3d3"
+    ></View>
+
+
+
+</LinearLayout>

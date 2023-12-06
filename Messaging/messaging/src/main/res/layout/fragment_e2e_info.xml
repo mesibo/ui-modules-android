@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <!--
+    <ImageView
+        android:id="@+id/tringmeLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginBottom="15sp"
+        android:layout_marginTop="15sp"
+        android:adjustViewBounds="true"
+        android:maxWidth="300dip"
+        android:scaleType="centerInside"
+        android:src="@drawable/tringme150" />
+
+        -->
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:background="@color/white"
+        >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/e2einactive"
+                android:visibility="gone"
+                android:layout_gravity="top|center_horizontal|center_vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="End-to-End Encryption NOT Active"
+                    android:layout_marginTop="24dp"
+                    android:padding="5dp"
+                    android:textSize="20dp"
+                    android:textColor="@android:color/black"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:text="End-to-end encryption is currently not active between You and FirstName. It will be automatically activated when you exchange messages with FirstName and if FirstName is using the latest version of the app. Note that the normal TLS encryption still applies."
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:id="@+id/e2einactivetext"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/e2eself"
+                android:visibility="gone"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="Certificate &amp; Identity Management"
+                    android:layout_marginTop="24dp"
+                    android:padding="5dp"
+                    android:textSize="20dp"
+                    android:textColor="@android:color/black"
+                 />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:text="It is not necessary to configure these options for casual chat. The default e2ee provides best-in-the-class security.  Use these options only if the nature of chat requires extra protection or you suspect eavesdropping"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:id="@+id/e2eselftexttop"
+                    />
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/border_e2e"
+
+
+                    android:padding="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="0dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:text="Export Public Certificate"
+                        android:layout_marginTop="4dp"
+                        android:padding="3dp"
+                        android:textSize="20dp"
+                        android:textColor="@android:color/black"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:text="Your public certificate gets safely transmitted by mesibo to your peers without any manual interventions. However, if you suspect any man-in-the-middle attack (which is highly unlikely),  you can export and share your public certificate with your peers by other means."
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:textColor="@android:color/black"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/myPrimaryColor"
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Export"
+                        android:textColor="@color/white"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/e2eselfexportbutton"
+                        />
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/border_e2e"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"
+                    android:layout_margin="10dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:text="Load Private Certificate"
+                        android:layout_marginTop="4dp"
+                        android:padding="3dp"
+                        android:textSize="20dp"
+                        android:textColor="@android:color/black"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:text="mesibo automatically generates a private certificate for you which safely remains on your device only. However, if you prefer to use your custom certificate, you can load it here. Refer to the documentation to learn how to generate one."
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:textColor="@android:color/black"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/myPrimaryColor"
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Select Certificate"
+                        android:textColor="@color/white"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/e2eselfloadbutton"
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/e2einfo"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="End-to-End Encryption Is Active"
+                    android:layout_marginTop="24dp"
+                    android:padding="5dp"
+                    android:textSize="20dp"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/e2estatus" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:text="Your messages and calls are end-to-end encrypted. You and FirstName can further ensure it by comparing the fingerprint below."
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:id="@+id/e2etexttop"
+                    />
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/border_e2e"
+                    android:padding="10dp"
+                    android:layout_margin="10dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:text="Fingerprint"
+                        android:layout_marginTop="4dp"
+                        android:padding="3dp"
+                        android:textSize="20dp"
+                        android:textColor="@android:color/black"
+                        />
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="AWMD-4798-BD89"
+                        android:padding="5dp"
+                        android:textSize="36dp"
+                        android:maxLines="1"
+                        android:textColor="@color/myPrimaryColor"
+                        android:id="@+id/e2e_fp_top" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:text="1234-5678-1234-1234-1234"
+                        android:textSize="18dp"
+                        android:textColor="#777777"
+                        android:id="@+id/e2e_fp_bottom" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:text="The identical fingerprint for both ensures total security for you and FirstName and confirm that no one is in the middle eavesdropping. If you are in a hurry, at least compare large text."
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:id="@+id/e2etextbottom"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:text="Although OPTIONAL, you can further enhance end-to-end encryption by configuring the Advanced Options."
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:visibility="gone"
+                    android:id="@+id/e2etextlast"
+                    />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/myPrimaryColor"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Advanced Options"
+                    android:textColor="@color/white"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/e2eoptbutton"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:id="@+id/e2eopt"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="Man-In-the-Middle Protection"
+                    android:layout_marginTop="24dp"
+                    android:padding="5dp"
+                    android:textSize="20dp"
+                    android:textColor="@android:color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/e2eopttext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:text="It is not necessary to configure these options for casual chat. The default e2ee provides best-in-the-class security.  Use these options only if the nature of chat requires extra protection from eavesdropping, for example, banking."
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/border_e2e"
+                    android:padding="10dp"
+                    android:layout_margin="10dp"
+                    android:id="@+id/e2eoptions"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:text="Configure a Password"
+                        android:padding="5dp"
+                        android:textSize="20dp"
+                        android:textColor="@android:color/black"
+                        />
+
+                    <TextView
+                        android:id="@+id/e2epasstext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:text="Use a password that only you and FirstName know. It will be added to the per-message encryption to make it near impossible for anyone to intercept your communication."
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:textColor="@android:color/black"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/black"
+                        android:padding="1dp"
+                        >
+
+                        <EditText
+                            android:padding="4dp"
+                            android:layout_margin="0dp"
+                            android:id="@+id/password"
+                            android:background="@android:color/white"
+                            android:hint="Enter Password"
+                            android:textColorHint="@android:color/darker_gray"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"/>
+
+                        <ImageView
+                            android:padding="4dp"
+                            android:layout_margin="0dp"
+                            android:id="@+id/e2epassbutton"
+                            android:background="@android:color/white"
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/ic_save_black_18dp"
+                            android:layout_height="wrap_content"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/border_e2e"
+                    android:padding="10dp"
+                    android:layout_margin="10dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:text="Configure a Certificate"
+                        android:padding="5dp"
+                        android:textSize="20dp"
+                        android:textColor="@android:color/black"
+                        />
+
+                    <TextView
+                        android:id="@+id/e2ecerttext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
+                        android:text="Install the public certificate of FirstName to ensure that you are communicating with FirstName and no one is in the middle eavesdropping."
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:textColor="@android:color/black"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/myPrimaryColor"
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Select Certificate"
+                        android:textColor="@color/white"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/e2ecertbutton"
+                        />
+
+
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/myPrimaryColor"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Reset Options"
+                    android:textColor="@color/white"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/e2eresetbutton"
+                    />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

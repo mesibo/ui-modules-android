@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    >
+
+    <LinearLayout
+        android:id="@+id/vL_topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/roundcorner"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin10">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin10"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:paddingTop="@dimen/margin10">
+
+            <TextView
+                android:id="@+id/vT_ovl_Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin10"
+                android:textSize="16sp"
+
+                />
+
+            <TextView
+                android:id="@+id/vT_ovl_message"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/vT_ovl_Title"
+                android:layout_marginBottom="@dimen/margin5"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin5"
+                android:gravity="center"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/vL_layoutLinear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@+id/vT_ovl_message"
+                android:layout_marginTop="@dimen/margin10"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <EditText
+                    android:id="@+id/vE_ovl_enterOtp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:layout_weight="1.7"
+                    android:background="@android:color/transparent"
+                    android:gravity="center|left"
+                    android:inputType="number"
+                    android:focusable="true"
+                    android:textSize="20sp" >
+
+                </EditText>
+
+
+                <TextView
+                    android:id="@+id/vT_ovl_resendOtp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/vT_ovl_message"
+                    android:layout_gravity="center|right"
+                    android:layout_weight=".3"
+
+
+                    android:gravity="center|right"
+                    android:textSize="15sp"
+
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="@dimen/margin2"
+                android:id="@+id/vV_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/vL_layoutLinear"
+                android:background="#808080"></View>
+
+            <TextView
+                android:id="@+id/vT_ovl_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/vV_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin10"
+                android:gravity="center"
+                android:text="something"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/vT_ovl_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/vV_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="@dimen/margin10"
+                android:layout_toRightOf="@+id/vT_ovl_textview"
+                android:gravity="center"
+                android:text="timer"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vL_ovl_belowbuttonLay"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/roundblue"
+        android:orientation="horizontal"
+        android:weightSum="2"
+
+        android:gravity="bottom"
+        android:layout_below="@+id/vL_topLayout">
+
+        <TextView
+            android:id="@+id/vB_cancel"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+            android:gravity="center"
+            android:textSize="16sp"
+
+            android:layout_marginRight="1dp"
+
+
+            />
+        <View
+            android:layout_below="@+id/vL_layoutLinear"
+            android:id="@+id/vV_view2"
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            ></View>
+        <TextView
+            android:layout_weight="1"
+            android:layout_marginLeft="1dp"
+            android:id="@+id/vB_ovl_verify"
+            android:layout_width="0dp"
+            android:textSize="16sp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+
+            android:layout_toRightOf="@+id/vB_cancel"
+
+
+
+
+
+            />
+    </LinearLayout>
+
+
+
+</LinearLayout>
+</ScrollView>

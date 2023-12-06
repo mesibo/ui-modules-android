@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    >
+
+    <com.mesibo.messaging.ThumbnailProgressView
+        android:id="@+id/m_picture"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:padding="5dp"
+        android:visibility="visible"
+        android:layout_marginBottom="-9dp"
+        />
+
+    </FrameLayout>

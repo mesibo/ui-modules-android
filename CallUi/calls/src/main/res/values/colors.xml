@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="callLogsBackground">#fff5f5f5</color>
+    <color name="colorPrimary2">#3F51B5</color>
+
+    <color name="colorPrimary">#00868B</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black_overlay">#555555</color>
+    <color name="black_overlay_2">#858585</color>
+
+    <color name="grey">#c9c9c9</color>
+
+
+</resources>

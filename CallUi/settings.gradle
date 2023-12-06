@@ -1,0 +1,3 @@
+include ':calls'
+include ':app'
+rootProject.name = "Calls"

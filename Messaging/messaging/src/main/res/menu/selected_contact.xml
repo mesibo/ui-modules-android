@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_unread"
+        android:icon="@drawable/ic_unread_black_24dp"
+        app:showAsAction="always"
+        android:orderInCategory="0"
+        android:title="Mark as Unread" />
+
+    <item
+        android:id="@+id/menu_remove"
+        android:icon="@drawable/ic_delete_black_24dp"
+        app:showAsAction="always"
+        android:orderInCategory="0"
+        android:title="Delete" />
+
+    <!--
+    <item
+        android:id="@+id/menu_archive"
+        android:icon="@drawable/ic_archive_black_24dp"
+        app:showAsAction="never"
+        android:orderInCategory="0"
+        android:title="Archive" />
+        -->
+
+</menu>

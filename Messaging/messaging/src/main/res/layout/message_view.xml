@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/message_layout"
+    android:padding="0dp"
+    android:layout_margin="0dp"
+    >
+
+    <!--
+    <include
+        layout="@layout/reply_layout"
+        android:visibility="gone"
+        ></include>
+        -->
+    <FrameLayout
+        android:id="@+id/reply_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="0dp"
+        android:layout_margin="0dp"
+        >
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reply_container"
+        >
+
+        <TextView
+            android:id="@+id/m_pheading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:singleLine = "true"
+            android:text="This is heading"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#ff999999"
+            android:textStyle="italic"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="0dp"
+            android:visibility="gone"
+            />
+
+        <FrameLayout
+            android:id="@+id/m_piclayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:layout_below="@+id/m_pheading"
+            >
+
+            <!-- We now create this dynamically if needed
+        <com.mesibo.messaging.ThumbnailProgressView
+            android:id="@+id/m_picture"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:visibility="visible"
+            android:layout_marginBottom="-9dp"
+            />
+
+            -->
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/m_titlelayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/m_piclayout"
+            android:layout_marginBottom="3dp"
+            android:paddingBottom="5dp"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/m_ptitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:autoLink="web"
+                android:maxLines="2"
+                android:singleLine="false"
+                android:ellipsize="end"
+                android:text="This is title"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="-2dp"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/m_psubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:singleLine="false"
+                android:ellipsize="end"
+                android:text="This is subtitle"
+                android:textSize="14sp"
+                android:textColor="@color/black_overlay"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="-2dp"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+        <com.mesibo.emojiview.EmojiconTextView
+            android:id="@+id/m_pmessage"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:autoLink="web"
+            android:layout_below="@+id/m_titlelayout"
+            android:singleLine = "false"
+            android:text="what \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"
+            app:emojiconSize="28sp"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="1dp"
+            android:paddingTop="3dp"
+            android:textSize="16sp"
+            android:textColor="#ff000000"
+            android:visibility="visible"
+
+            />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

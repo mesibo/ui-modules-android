@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="welcome_heading">24.0sp</dimen>
+    <dimen name="welcome_content_min_height">96.0dip</dimen>
+    <dimen name="welcome_content">16.0sp</dimen>
+
+    <dimen name="margin10">10dp</dimen>
+    <dimen name="margin5">5dp</dimen>
+    <dimen name="margin2">2dp</dimen>
+</resources>

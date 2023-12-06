@@ -1,0 +1,110 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/nugroup_root_layout"
+    tools:context="com.mesibo.messaging.CreateNewGroupFragment">
+
+   <LinearLayout
+       android:orientation="vertical"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+        <LinearLayout
+           android:orientation="horizontal"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+
+           <ImageView
+               android:id="@+id/nugroup_picture"
+               android:layout_width="60dp"
+               android:layout_height="60dp"
+               android:layout_marginLeft="10dp"
+               android:layout_marginRight="10dp"
+               android:layout_marginTop="15dp"
+               android:layout_marginBottom="15dp"
+               android:src="@drawable/default_user_image"
+
+               />
+
+            <RelativeLayout
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mesibo.emojiview.EmojiconEditText
+                    android:id="@+id/nugroup_editor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:layout_margin="1dp"
+                    android:textSize="18sp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:paddingRight="35dp"
+                    android:hint="Type Group name"
+                    />
+
+                <ImageView
+                    android:id="@+id/nugroup_smile_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_sentiment_satisfied_black_24dp"
+                    android:layout_centerVertical="true"
+                    android:tint="@color/md_grey_500"
+                    android:layout_alignParentRight="true"
+                    />
+
+
+            </RelativeLayout>
+
+
+            <TextView
+               android:id="@+id/nugroup_counter"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textSize="18sp"
+               android:text="123"
+               android:minWidth="30dp"
+               android:layout_margin="3dp"
+               android:layout_gravity="center_vertical"
+               />
+
+
+       </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/nugroup_members"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/md_white_1000"
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+       <LinearLayout
+           android:id="@+id/nugroup_create_btn"
+           android:layout_width="match_parent"
+           android:layout_height="50dp">
+
+           <TextView
+               android:id="@+id/nugroup_button"
+               android:background="@color/colorPrimary"
+               android:textColor="@color/md_white_1000"
+               android:text="Done"
+               android:layout_gravity="center"
+               android:gravity="center"
+               android:textSize="18sp"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent" />
+
+       </LinearLayout>
+
+   </LinearLayout>
+
+</FrameLayout>

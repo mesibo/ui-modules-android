@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    style="@style/listViewActivatedStyle">
+
+
+    <TextView android:id="@+id/country_name"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="2dp"
+        android:layout_width="0dp"
+        android:layout_weight="7"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="India"
+
+        />
+
+    <!-- Use standard android.R class text1 id instead of app specific id. This is just useful for
+         consistency. This view also sets layout_alignWithParentIfMissing=true which lets the view
+         align with the parent view if the text2 view is not part of the view hierarchy (which is
+         its initial state). -->
+    <TextView android:id="@+id/country_code"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="2dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_weight="3"
+        android:text="+91"
+
+        />
+
+</LinearLayout>

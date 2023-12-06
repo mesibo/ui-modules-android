@@ -1,0 +1,18 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_size_1">30sp</dimen>
+    <dimen name="text_size_2">12sp</dimen>
+    <dimen name="sdp_100">@dimen/_100sdp</dimen>
+    <dimen name="incomming_call_icon">@dimen/_50sdp</dimen>
+    <dimen name="incomming_video_call_icon">@dimen/_40sdp</dimen>
+    <dimen name="outgoing_video_call_icon_size">@dimen/_30sdp</dimen>
+    <dimen name="outgoing_video_call_remind_icon_size">@dimen/_30sdp</dimen>
+    <dimen name="outgoing_video_call_icon_text_size">@dimen/_12sdp</dimen>
+    <dimen name="outgoing_video_call_icon_margin">@dimen/_4sdp</dimen>
+    <dimen name="outgoing_video_call_icon_padding">@dimen/_9sdp</dimen>
+    <dimen name="outgoing_video_call_icon_inner_padding">@dimen/_5sdp</dimen>
+
+    <dimen name="incomming_call_icon_inner_padding">@dimen/_10sdp</dimen>
+    <dimen name="incomming_call_icon_text_size">@dimen/_12sdp</dimen>
+    <dimen name="incomming_call_icon_dialer_text_size">@dimen/_20sdp</dimen>
+</resources>

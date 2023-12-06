@@ -1,0 +1,74 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    android:weightSum="1"
+    android:background="@color/md_white_1000"
+    >
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/emptyview_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:text="You do not have contacts to show instead add contacts from new contacts list"
+            android:textColor="@color/md_grey_500"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/message_contact_frag_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/md_white_1000"
+                />
+
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bottom_forward_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:layout_weight="1"
+        android:visibility="gone"
+
+        >
+
+        <ImageView
+            android:id="@+id/forward_to_contacts"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_action_forward"
+            android:layout_gravity="center"
+            android:foregroundGravity="center"
+
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

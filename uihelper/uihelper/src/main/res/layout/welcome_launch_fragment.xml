@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+
+    <com.mesibo.uihelper.Utils.TouchInterceptLayout
+        android:id="@+id/main_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="75dp"
+
+        >
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager_text"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:minHeight="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:layout_weight="1" />
+
+        <com.mesibo.uihelper.Utils.OverLayFrameLayout
+            android:id="@+id/overlay_frame"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="41dp"
+            android:paddingTop="41dp"
+            android:paddingLeft="21dp"
+            android:paddingRight="21dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/viewpager_text"
+            android:background="@drawable/mobile9"
+            android:clipChildren="false"
+            android:animateLayoutChanges="true"
+            >
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager_picture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1" />
+        </com.mesibo.uihelper.Utils.OverLayFrameLayout>
+
+        <LinearLayout
+            android:id="@+id/viewPagerIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_alignTop="@+id/bottom_bar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:background="#60000000"
+            android:paddingBottom="35dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center">
+
+
+        </LinearLayout>
+    </com.mesibo.uihelper.Utils.TouchInterceptLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:animateLayoutChanges="true"
+        android:visibility="visible"
+
+
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/tnc"
+                android:linksClickable="true"
+                android:id="@+id/terms"
+                android:textSize="12sp"
+                android:autoLink="web"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:gravity="center_horizontal" />
+
+            <ImageButton
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_close_black_18dp"
+                android:id="@+id/close_pane"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:visibility="visible"
+                android:background="#00000000"
+                android:alpha="0.5"
+                />
+
+        </RelativeLayout>
+        <Button
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:background="@color/myPrimaryColor"
+            android:id="@+id/signin"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            android:textSize="18dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_margin="2dp"
+
+            >
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/info_pane"
+                android:layout_gravity="center_vertical"
+                android:src="@android:drawable/ic_menu_info_details"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="We will never publish anything on facebook"
+                android:id="@+id/info_text"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textSize="12sp"
+                android:layout_gravity="center_horizontal" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Mesibo never publishes anything on your facebook wall Mesibo never publishes anything on your facebook wall \n\n Mesibo never publishes anything on your facebook wall"
+            android:id="@+id/bottom_textview"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"
+            android:visibility="visible"
+            android:animateLayoutChanges="false"
+            android:layout_gravity="center_horizontal" />
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

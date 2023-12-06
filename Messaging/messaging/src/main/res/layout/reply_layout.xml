@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/reply_layout"
+    android:visibility="visible"
+    android:minHeight="10dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginRight="12dp"
+    android:background="#20000000"
+    android:animateLayoutChanges="true"
+    android:layout_marginLeft="12dp"
+    android:paddingBottom="0dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+        <TextView
+            android:id="@+id/reply_name"
+            android:text="James Bond"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/md_green_900"
+
+            />
+        <com.mesibo.emojiview.EmojiconTextView
+            android:id="@+id/reply_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="4dp"
+            android:paddingBottom="6dp"
+            android:paddingTop="0dp"
+            android:maxLines="3"
+            android:textSize="14sp"
+            android:text="Hi this is the reply chat message so find it check 1234  test message string can you tell me what is this testing nothing but waste of time"
+            android:layout_below="@+id/reply_name"
+            android:textColorHint="#c4c0bd"
+            android:layout_toLeftOf="@+id/reply_image"
+            android:background="@null"/>
+
+        <ImageView
+            android:id="@+id/reply_image"
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            android:src="@drawable/default_user_image"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/reply_text"
+            />
+
+
+        <ImageView
+            android:id="@+id/reply_cancel"
+            android:layout_width="24dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_cancel_black_24dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"
+            android:tint="@color/md_grey_500"
+            android:layout_height="24dp" />
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="wrap_content"
+            android:background="@color/md_green_900"
+            android:layout_alignBottom="@+id/reply_text"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+

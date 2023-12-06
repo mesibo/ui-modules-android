@@ -1,0 +1,56 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    defaultConfig {
+        minSdkVersion "${project.minSdkVersion}"
+        targetSdkVersion "${project.targetSdkVersion}"
+        versionCode 1
+        versionName "${project.MesiboBuildVersion_CallUi}"
+        buildConfigField "String", "BUILD_VERSION", "\"${project.PUBLISH_VERSION}\""
+        buildConfigField("String", "BUILD_TIMESTAMP", "\"${getBuildDate()}\"")
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+            buildConfigField "Boolean", "DEBUG_MODE", "true"
+        }
+
+        release {
+            minifyEnabled false
+            debuggable false
+            buildConfigField "Boolean", "DEBUG_MODE", "false"
+        }
+
+    }
+
+}
+
+repositories {
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "com.android.support:support-annotations:${project.supportLibVersion}"
+    implementation "com.android.support:appcompat-v7:${project.supportLibVersion}"
+    implementation "com.android.support:support-v4:${project.supportLibVersion}"
+    implementation "com.android.support:design:${project.supportLibVersion}"
+    implementation "com.intuit.sdp:sdp-android:${project.intuitSdpVersion}"
+
+    implementation "com.mesibo.api:webrtc:${project.MesiboBuildVersion_Webrtc}"
+    implementation "com.mesibo.api:mesibo:${project.MesiboPublishVersion_Api}"
+    implementation "com.mesibo.api:calls:${project.MesiboPublishVersion_Calls}"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
+

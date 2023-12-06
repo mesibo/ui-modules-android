@@ -1,0 +1,81 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply from: "../../buildscripts/module.gradle"
+
+// ext is a gradle closure allowing the declaration of global properties
+ext {
+    PUBLISH_GROUP_ID = 'com.mesibo.api'
+    PUBLISH_ARTIFACT_ID = 'ui'
+    PUBLISH_ARTIFACT_MAVENID = 'Ui'
+    PUBLISH_DESCRIPTION = 'Mesibo UI Libray for Messaging'
+    PUBLISH_GIT = 'ui-modules-android'
+    PUBLISH_VERSION = "${project.MesiboBuildVersion_Ui}"
+}
+
+def getBuildDate() {
+    new Date().format('yyyyMMddHHmmss')
+}
+
+android {
+
+    defaultConfig {
+        minSdkVersion "${project.minSdkVersion}"
+        targetSdkVersion "${project.targetSdkVersion}"
+        versionCode 1
+        versionName "${project.MesiboBuildVersion_Ui}"
+        buildConfigField "String", "BUILD_VERSION", "\"${project.PUBLISH_VERSION}\""
+        buildConfigField("String", "BUILD_TIMESTAMP", "\"${getBuildDate()}\"")
+    }
+
+    buildTypes {
+        release {
+            debuggable true
+            minifyEnabled false
+        }
+    }
+
+    productFlavors {
+    }
+}
+
+repositories {
+    flatDir{
+        dirs "${project.outPath}/mesibo/api/outputs/aar/",
+                "${project.outPath}/Messaging/messaging/outputs/aar",
+                "${project.outPath}/uihelper/uihelper/outputs/aar",
+                "${project.outPath}/AudioCall/audiocall/outputs/aar/",
+                "${project.webrtcOutPath}"
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+    implementation "com.android.support:appcompat-v7:${project.supportLibVersion}"
+    implementation "com.android.support:support-v4:${project.supportLibVersion}"
+    implementation "com.android.support:recyclerview-v7:${project.supportLibVersion}"
+    implementation "com.android.support:cardview-v7:${project.supportLibVersion}"
+    implementation "com.android.support:support-annotations:" +
+            "{project.supportLibVersion}"
+    implementation "com.android.support:design:${project.supportLibVersion}"
+    implementation "com.android.support:cardview-v7:${project.supportLibVersion}"
+
+    implementation "com.intuit.sdp:sdp-android:${project.intuitSdpVersion}"
+
+    implementation "com.mesibo.api:emojiview:${project.MesiboPublishVersion_EmojiView}"
+    implementation "com.mesibo.api:mediapicker:${project.MesiboPublishVersion_MediaPicker}"
+
+    implementation "com.google.android.gms:play-services-maps:${project.playServiceVersion}"
+    implementation "com.google.android.gms:play-services-location:${project.playServiceVersion}"
+    implementation "com.google.android.gms:play-services-places:${project.playServiceVersion}"
+
+    implementation 'com.google.android.libraries.places:places:2.6.0'
+
+       implementation "com.mesibo.api:mesibo:${project.MesiboPublishVersion_Api}"
+}
+
+repositories {
+    mavenCentral()
+
+}
+
+

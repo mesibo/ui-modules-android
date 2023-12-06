@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:gravity="top"
+    android:layout_gravity="top"
+    android:orientation="vertical"
+    android:id="@+id/verify_phone_dialog_parent_layout"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:measureAllChildren="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:fillViewport="true"
+        >
+        <!--android:layout_above="@id/verify_phone_signed_in_account"-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingLeft="40.0dip"
+            android:paddingTop="40.0dip"
+            android:paddingRight="40.0dip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="20.0sp"
+                android:textColor="@color/phone_verification_textcolor"
+                android:gravity="center"
+                android:id="@+id/title"
+                android:paddingBottom="16.0dip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Welcome to mesibo" />
+            <TextView
+                android:textSize="16.0sp"
+                android:textColor="@color/phone_verification_textcolor"
+                android:gravity="center"
+                android:textColorLink="@color/green"
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="please enter a valid phone number" />
+
+            <TextView
+                android:textColor="@color/errorTextColor"
+                android:id="@+id/error"
+                android:paddingTop="10.0dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Invalid Phone Number"
+                android:visibility="gone"
+                />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:paddingTop="24.0dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/verify_phone_fields"
+                >
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/country_text"
+                        android:textSize="12.0sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Country" />
+                    <EditText
+                        android:textSize="24.0sp"
+                        android:id="@+id/country_code"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:longClickable="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="74.0dip"
+                        android:minWidth="74.0dip"
+                        android:cursorVisible="false"
+                        android:singleLine="true"
+                        android:inputType="phone"
+                        android:text="+376"
+                        android:gravity="right"
+                        android:textColor="@color/black"
+                        android:theme="@style/AppDarkTheme"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16.0dip">
+                    <TextView
+                        android:id="@+id/phone_number_text"
+                        android:textSize="12.0sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phone Number" />
+                    <EditText
+                        android:textSize="24.0sp"
+                        android:id="@+id/phone"
+                        android:longClickable="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="200.0dip"
+                        android:singleLine="true"
+                        android:inputType="phone"
+                        android:textColor="@color/black"
+                        android:theme="@style/AppDarkTheme"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:paddingTop="24.0dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/verify_code_fields"
+                >
+                <TextView
+                    android:id="@+id/enter_code_text"
+                    android:textSize="12.0sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enter Code" />
+                <EditText android:textSize="24.0sp"
+                    android:id="@+id/code"
+                    android:longClickable="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="200.0dip"
+                    android:singleLine="true"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:theme="@style/AppDarkTheme"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/changemode"
+                android:paddingTop="10.0dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:visibility="gone"
+                android:theme="@style/AppDarkTheme"
+                android:text="Already have the code?" />
+
+            <Button
+                android:id="@+id/button_next"
+                android:layout_marginTop="20dp"
+                android:background="@color/myPrimaryDarkColor"
+                android:textSize="14.0sp"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Next"
+                style="@style/borderlessButtonStyle" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bottomInfoFields"
+                >
+                <TextView
+                    android:textSize="14.0sp"
+                    android:textColor="@color/phone_verification_textcolor"
+                    android:gravity="center"
+                    android:id="@+id/bottomNote1"
+                    android:paddingTop="24.0dip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Note, Mesibo may call instead of sending an SMS if you enter the landline number." />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+
+    <LinearLayout
+        android:id="@+id/progressBar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#40ffffff"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/circular_Progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        </ProgressBar>
+    </LinearLayout>
+</RelativeLayout>

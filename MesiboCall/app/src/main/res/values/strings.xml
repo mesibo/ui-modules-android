@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Mesibo Call</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="disconnect_call">Disconnect Call</string>
+    <string name="ok">OK</string>
+    <string name="switch_camera">Switch front/back camera</string>
+    <string name="muted">Muted</string>
+    <string name="toggle_debug">Toggle debug view</string>
+    <string name="toggle_speaker">Toggle speaker on/off</string>
+    <string name="toggle_camera">Toggle camera on/off</string>
+    <string name="toggle_mic">Toggle microphone on/off</string>
+    <string name="format_description">%1$dx%2$d @ %3$d fps</string>
+    <string name="camera2_texture_only_error">Camera2 only supports capturing to texture. Either disable Camera2 or enable capturing to texture in the options.</string>
+</resources>
