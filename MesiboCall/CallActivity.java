@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2023 mesibo                                              *
+* Copyright (c) 2019-2025 mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -26,7 +26,9 @@ package com.mesibo.calls.app;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.mesibo.api.Mesibo;
 import com.mesibo.calls.api.MesiboCall;
@@ -99,7 +101,7 @@ public class CallActivity extends MesiboCallActivity {
         fragment.MesiboCall_OnSetCall(this, mCall);
 
         FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.top_fragment_container, fragment);
         ft.commitAllowingStateLoss();
     }

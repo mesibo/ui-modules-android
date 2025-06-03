@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2023 mesibo                                              *
+* Copyright (c) 2019-2025 mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -24,15 +24,22 @@
 
 package com.mesibo.calls.app;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -43,18 +50,39 @@ import com.mesibo.api.MesiboUtils;
 import com.mesibo.calls.api.MesiboCall;
 import com.mesibo.calls.api.MesiboCallActivity;
 import com.mesibo.calls.api.MesiboVideoView;
+import com.mesibo.calls.api.ui.ViewTouchListener;
 
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_ANSWER;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_BUSY;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_COMPLETE;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_HOLD;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_INPROGRESS;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_INVALIDDEST;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_NETWORKERROR;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_NOANSWER;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_NOCALLS;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_NONE;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_NOTALLOWED;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_RECONNECTING;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_RINGING;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_SWITCHED;
+import static com.mesibo.calls.api.MesiboCall.CALLSTATUS_UNREACHABLE;
 import static com.mesibo.calls.api.MesiboCall.MESIBOCALL_SOUND_RINGING;
 import static com.mesibo.calls.api.MesiboCall.MESIBOCALL_UI_STATE_SHOWCONTROLS;
 import static com.mesibo.calls.api.MesiboCall.MESIBOCALL_UI_STATE_SHOWINCOMING;
+import static com.mesibo.calls.api.MesiboCall.MESIBOCALL_VIDEOSOURCE_SCREEN;
+
+import androidx.fragment.app.Fragment;
 
 
-public class CallFragment extends Fragment implements MesiboCall.InProgressListener, View.OnClickListener {
+public class CallFragment extends Fragment implements MesiboCall.InProgressListener, View.OnClickListener, View.OnFocusChangeListener, View.OnTouchListener, View.OnKeyListener {
 
     public static final String TAG = "CallFragment";
     protected MesiboCall.Call mCall = null;
     protected MesiboCall.CallProperties mCp = null;
     protected MesiboCallActivity mActivity = null;
+    protected  Handler mainHandler = null;
+    protected  View mFocusedView = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +108,7 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
         ui.acceptAudioButton = view.findViewById(R.id.incoming_audio_call_connect);
         ui.declineButton = view.findViewById(R.id.incoming_call_disconnect);
 
+        ui.speakerToggleLayout = view.findViewById(R.id.layout_toggle_speaker);
         ui.cameraToggleLayout = view.findViewById(R.id.layout_toggle_camera);
         ui.sourceSwitchLayout = view.findViewById(R.id.layout_switch_source);
         ui.cameraSwitchLayout = view.findViewById(R.id.layout_switch_camera);
@@ -103,10 +132,27 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
         ui.acceptAudioButton.setOnClickListener(this);
         ui.declineButton.setOnClickListener(this);
 
+
+        setupButton(ui.cameraSwitchButton, mCp.ui.controlButton);
+        setupButton(ui.sourceSwitchButton, mCp.ui.controlButton);
+        setupButton(ui.toggleSpeakerButton, mCp.ui.controlButton);
+        setupButton(ui.toggleCameraButton, mCp.ui.controlButton);
+        setupButton(ui.toggleMuteButton, mCp.ui.controlButton);
+        setupButton(ui.disconnectButton, mCp.ui.disconnectButton);
+        setupButton(ui.declineButton, mCp.ui.declineButton);
+        setupButton(ui.acceptButton, mCp.ui.answerButton);
+        setupButton(ui.acceptAudioButton, mCp.ui.audioCallButton);
+
+        if(mCp.ui.focusable) {
+            ui.fullscreenVideo.setOnKeyListener(this);
+        }
+
         // Swap feeds on pip view click.
         if(null != ui.pipVideo) {
             ui.pipVideo.setOnClickListener(this);
             ui.pipVideo.enablePip(true);
+
+            ui.pipVideo.setOnTouchListener(new ViewTouchListener());
         }
 
         if(null != ui.fullscreenVideo) {
@@ -121,20 +167,59 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
             ui.sourceSwitchLayout.setVisibility(View.GONE);
         }
 
-
         ui.thumbnailLayout = view.findViewById(R.id.photo_layout);
         TextView nameView = (TextView)view.findViewById(R.id.call_name);
         //TextView addrView = (TextView)view.findViewById(R.id.call_address);
         ImageView imageView = view.findViewById(R.id.photo_image);
         setUserDetails(nameView, imageView);
 
-        setStatusView(Mesibo.CALLSTATUS_NONE);
+        setStatusView(CALLSTATUS_NONE);
 
         setSwappedFeeds(mCall.isVideoViewsSwapped());
         ui.pipVideo.setVisibility(mCall.isAnswered()?View.VISIBLE:View.GONE);
 
         mCall.start((MesiboCallActivity) getActivity(), this);
         return view;
+    }
+
+    protected static void createButtonDrawable(Context context, MesiboCall.UiButtonBackground b) {
+        if(null != b.drawable)
+            return;
+
+        if(b.drawableId > 0) {
+            b.drawable = (GradientDrawable) context.getResources().getDrawable(b.drawableId);
+            return;
+        }
+
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.OVAL);
+        if(b.backgroundColor != 0) shape.setColor(b.backgroundColor);
+
+        if(b.strokeWidth > 0 && b.strokeColor != 0) shape.setStroke(b.strokeWidth, b.strokeColor);
+        b.drawable = shape;
+    }
+    public static void createButtonDrawable(Context context, MesiboCall.UiButtonProperties b, boolean focusable) {
+        createButtonDrawable(context, b.normal);
+        if(focusable) createButtonDrawable(context, b.infocus);
+    }
+
+    void setupButton(View button, MesiboCall.UiButtonProperties prop) {
+        // we are passing true as infocus drawable will be used as on press drawable in touch mode
+        createButtonDrawable(getActivity(), prop, mCp.ui.focusable);
+        button.setTag(R.string.call_tag_id, prop);
+
+        // button.setBackground(prop.normal.drawable);
+        ((View)button.getParent()).setBackground(prop.normal.drawable);
+
+        if(mCp.ui.focusable) {
+
+            button.setFocusable(true);
+
+            button.setFocusableInTouchMode(true);
+            button.setOnFocusChangeListener(this);
+        } else {
+            //button.setOnTouchListener(this);
+        }
     }
 
     void answer(boolean video) {
@@ -145,6 +230,51 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
         //setCallView();
         if(mCall.isVideoCall() && video)
             ui.pipVideo.setVisibility(View.VISIBLE);
+
+        setStatusView(CALLSTATUS_ANSWER, null, false);
+
+        makeCallInProgressButtonsFocusable(true);
+    }
+
+    private void setBackground(View v, boolean hasFocus) {
+        MesiboCall.UiButtonProperties prop = (MesiboCall.UiButtonProperties) v.getTag(R.string.call_tag_id);
+        if(null == prop) return;
+        ((View)v.getParent()).setBackground(hasFocus?prop.infocus.drawable:prop.normal.drawable);
+    }
+
+    protected void hangup() {
+
+        if(mCp.ui.focusable) {
+            if(mCall.isAnswered())
+                ui.disconnectButton.requestFocus();
+            else
+                ui.declineButton.requestFocus();
+        }
+
+        mCall.hangup();
+        setStatusView(CALLSTATUS_COMPLETE);
+        mActivity.delayedFinish(500); // if user clicked end, close asap
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(true) return false;
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            setBackground(v, true);
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            setBackground(v, false);
+        }
+        return false; // return false so that onClick is handled
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if(hasFocus) {
+            v.setOnKeyListener(this);
+        } else {
+            v.setOnKeyListener(null);
+        }
+        setBackground(v, hasFocus);
     }
 
     @Override
@@ -157,10 +287,7 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
         else if(id == R.id.fullscreen_video_view)
             toggleCallControlsVisibility();
         else if(id == R.id.incoming_call_disconnect || id == R.id.button_call_disconnect) {
-            mCall.hangup();
-            setStatusView(Mesibo.CALLSTATUS_COMPLETE);
-            //setCallControlsVisibility(true, true);
-            mActivity.delayedFinish(500); // if user clicked end, close asap
+            hangup();
         }
         else if(id == R.id.incoming_call_connect) {
             answer(true);
@@ -181,6 +308,41 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
         }
     }
 
+    /* the sequence here is ACTION_DOWN -> FOCUS CHANGE -> ACTION_UP */
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (!mCall.isAnswered()) {
+            return false;
+        }
+
+        if(keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+
+            if(event.getAction() == KeyEvent.ACTION_DOWN)
+                toggleCallControlsVisibility();
+
+            return true; // don't let user press up/down else we are losing focus
+        }
+
+        if (event.getAction() != KeyEvent.ACTION_UP)
+            return false;
+
+        // let default action happen and hence returning false
+        if(callControlFragmentVisible) {
+            return false;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+                keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            toggleCallControlsVisibility();
+        }
+
+        return false;
+    }
+
     private void setSwappedFeeds(boolean isSwappedFeeds) {
         if(!mCall.isVideoCall()) return;
 
@@ -192,8 +354,8 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
 
     public void setUserDetails(TextView nameView, ImageView image) {
 
-        if(!TextUtils.isEmpty(mCp.user.name)) {
-            nameView.setText(mCp.user.name);
+        if(!TextUtils.isEmpty(mCp.user.getName())) {
+            nameView.setText(mCp.user.getName());
         } else
             nameView.setText(mCp.user.address);
 
@@ -206,12 +368,18 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
         super.onResume();
 
         if(mCp.autoAnswer) {
-            answer(mCall.isVideoCall());
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    answer(mCp.video.enabled);
+                }
+            }, 1000);
         }
     }
 
 
-    public void setStatusView(int status) {
+    public void setStatusView(int status, String customStatus, boolean waiting) {
         if(mCall.isAnswered() && mCall.isCallInProgress() && mCall.isCallConnected()) {
             ui.status.setFormat(null);
             ui.status.setText("");
@@ -221,8 +389,16 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
         }
 
         ui.status.stop();
-        ui.mStatusText = statusToString(status, ui.mStatusText);
+        if(null != customStatus)
+            ui.mStatusText = customStatus;
+        else
+            ui.mStatusText = statusToString(status, ui.mStatusText, waiting);
+
         ui.status.setText(ui.mStatusText);
+    }
+
+    public void setStatusView(int status) {
+        setStatusView(status, null, false);
     }
 
     public void updateRemoteMuteButtons() {
@@ -255,8 +431,8 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
     }
 
     @Override
-    public void MesiboCall_OnVideoSourceChanged(int source, int index) {
-        setButtonAlpha(ui.sourceSwitchButton, source == MesiboCall.MESIBOCALL_VIDEOSOURCE_SCREEN);
+    public void MesiboCall_OnVideoSourceChanged(MesiboCall.CallProperties p, int source, int index) {
+        setButtonAlpha(ui.sourceSwitchButton, source == MESIBOCALL_VIDEOSOURCE_SCREEN);
     }
 
     @Override
@@ -301,17 +477,33 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
             ui.sourceSwitchLayout.setVisibility(vcVisibility);
         ui.thumbnailLayout.setVisibility(vcVisibility);
         ui.incomingVideoAcceptLayout.setVisibility(vciVisibility);
+
+        if(mCp.ui.userImageThumbnail) {
+            ui.background.setVisibility(View.GONE);
+            ui.thumbnailLayout.setVisibility(View.VISIBLE);
+        }
+
+        if(video && !Mesibo.hasCamera()) {
+            ui.cameraSwitchLayout.setVisibility(View.GONE);
+            ui.cameraToggleLayout.setVisibility(View.GONE);
+        }
+
+        if(mCp.ui.focusable && !mCall.isAnswered()) {
+            if(showIncoming) ui.declineButton.requestFocus();
+            else ui.disconnectButton.requestFocus();
+        }
     }
 
     @Override
-    public void MesiboCall_OnStatus(MesiboCall.CallProperties p, int status, boolean video) {
+    public void MesiboCall_OnStatus(MesiboCall.CallProperties p, int status, boolean video, boolean waiting) {
 
+        mCp.ui.callStatusText = null;
         if(null != mCp.ui.inProgressListener)
-            mCp.ui.inProgressListener.MesiboCall_OnStatus(p, status, video);
+            mCp.ui.inProgressListener.MesiboCall_OnStatus(p, status, video, waiting);
 
-        setStatusView(status);
+        setStatusView(status, mCp.ui.callStatusText, waiting);
 
-        if((status& Mesibo.CALLSTATUS_COMPLETE) > 0) {
+        if((status& CALLSTATUS_COMPLETE) > 0) {
             mActivity.delayedFinish(3000);
             return;
         }
@@ -320,8 +512,13 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
 
         switch (status) {
 
-            case Mesibo.CALLSTATUS_CONNECTED:
+            case MesiboCall.CALLSTATUS_CONNECTED:
                 callConnected();
+                break;
+
+            case CALLSTATUS_ANSWER:
+                //callConnected();
+                makeCallInProgressButtonsFocusable(true);
                 break;
         }
 
@@ -350,7 +547,9 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
 
         public View incomingView, inprogressView, controlLayout;
         public View cameraToggleLayout, cameraSwitchLayout, thumbnailLayout, sourceSwitchLayout;
+        public View speakerToggleLayout;
         public View incomingVideoAcceptLayout, incomingAudioAcceptLayout;
+        public View backgroundView;
 
         public String mStatusText = "";
 
@@ -397,7 +596,7 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
             return true;
         }
 
-        mCall.playInCallSound(mActivity.getApplicationContext(), (MESIBOCALL_SOUND_RINGING == type)?R.raw.mesibo_ring :R.raw.mesibo_busy, true);
+        mCall.playInCallSound(mActivity.getApplicationContext(), (MESIBOCALL_SOUND_RINGING == type)?mCp.inCallRingSound:mCp.inCallBusySound, true);
         return true;
     }
 
@@ -413,12 +612,12 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
     }
 
     @Override
-    public void MesiboCall_OnOrientationChanged(boolean landscape, boolean remote) {
+    public void MesiboCall_OnOrientationChanged(MesiboCall.CallProperties p, boolean landscape, boolean remote) {
 
     }
 
     @Override
-    public void MesiboCall_OnBatteryStatus(boolean low, boolean remote) {
+    public void MesiboCall_OnBatteryStatus(MesiboCall.CallProperties p, boolean low, boolean remote) {
 
     }
 
@@ -427,67 +626,67 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
 
     }
 
-    public String statusToString(int status, String statusText) {
+    public String statusToString(int status, String statusText, boolean waiting) {
 
         switch (status) {
-            case Mesibo.CALLSTATUS_NONE:
+            case CALLSTATUS_NONE:
                 statusText = "Initiating Call";
                 if(mCall.isIncoming())
                     statusText = "Incoming Call";
                 break;
 
-            case Mesibo.CALLSTATUS_INPROGRESS:
+            case CALLSTATUS_INPROGRESS:
                 statusText = "Calling";
                 break;
 
-            case Mesibo.CALLSTATUS_RINGING:
+            case CALLSTATUS_RINGING:
                 statusText = "Ringing";
                 break;
 
-            case Mesibo.CALLSTATUS_BUSY:
+            case CALLSTATUS_BUSY:
                 statusText = "Busy";
                 break;
 
-            case Mesibo.CALLSTATUS_NOANSWER:
+            case CALLSTATUS_NOANSWER:
                 statusText = "No Answer";
                 break;
 
-            case Mesibo.CALLSTATUS_NOCALLS:
+            case CALLSTATUS_NOCALLS:
                 statusText = "Calls Not Supported";
                 break;
 
-            case Mesibo.CALLSTATUS_NETWORKERROR:
+            case CALLSTATUS_NETWORKERROR:
                 statusText = "Network Error";
                 break;
 
-            case Mesibo.CALLSTATUS_UNREACHABLE:
+            case CALLSTATUS_UNREACHABLE:
                 statusText = "Not Reachable";
                 break;
 
-            case Mesibo.CALLSTATUS_INVALIDDEST:
+            case CALLSTATUS_INVALIDDEST:
                 statusText = "Invalid Destination";
                 break;
 
-            case Mesibo.CALLSTATUS_COMPLETE:
+            case CALLSTATUS_COMPLETE:
                 statusText = "Call Completed";
                 break;
 
-            case Mesibo.CALLSTATUS_NOTALLOWED:
+            case CALLSTATUS_NOTALLOWED:
                 statusText = "Not Allowed";
                 break;
 
-            case Mesibo.CALLSTATUS_RECONNECTING:
+            case CALLSTATUS_RECONNECTING:
                 statusText = "Reconnecting";
                 break;
 
-            case Mesibo.CALLSTATUS_HOLD:
+            case CALLSTATUS_HOLD:
                 if(mCall.isAnswered()) {
                     statusText = "On Hold";
                 }
                 break;
 
 
-            case Mesibo.CALLSTATUS_ANSWER:
+            case CALLSTATUS_ANSWER:
                 if(!mCall.isLinkUp()) {
                     statusText = "Connecting";
                 }
@@ -495,6 +694,21 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
         }
 
         return statusText;
+    }
+
+    private void makeCallInProgressButtonsFocusable(boolean visible) {
+        if(!mCall.isAnswered()) return;
+        if(!mCp.ui.focusable) return;
+
+        ui.declineButton.clearFocus();
+        if(visible) {
+            ui.toggleSpeakerButton.requestFocus();
+            ui.fullscreenVideo.clearFocus();
+        }
+        else {
+            ui.toggleSpeakerButton.clearFocus();
+            ui.fullscreenVideo.requestFocus();
+        }
     }
 
     private boolean callControlFragmentVisible = true;
@@ -519,6 +733,9 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
 
             if (autoHide && visibility && autoHideVideoControlsTimeout > 0)
                 triggerDelayedAutoHideControls();
+
+            makeCallInProgressButtonsFocusable(visibility);
+
         } catch (Exception e) {
 
         }
@@ -541,7 +758,13 @@ public class CallFragment extends Fragment implements MesiboCall.InProgressListe
 
                 // TBD. crashing here sometime after cellular call received while other call in prrogress
                 // and we come back here
-                setCallControlsVisibility(false, false);
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setCallControlsVisibility(false, false);
+                    }
+                });
+
             }
         });
 

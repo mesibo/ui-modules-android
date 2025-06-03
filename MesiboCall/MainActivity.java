@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2023 mesibo                                              *
+* Copyright (c) 2019-2025 mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -26,13 +26,18 @@ package com.mesibo.calls.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mesibo.api.Mesibo;
+import com.mesibo.api.MesiboDateTime;
+import com.mesibo.api.MesiboProfile;
 import com.mesibo.calls.api.MesiboCall;
 
 
@@ -52,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements Mesibo.Connection
         Mesibo mesibo = Mesibo.getInstance();
         mesibo.init(getApplicationContext());
         mesibo.setAccessToken(token);
-        boolean res = mesibo.setDatabase("callapp.db", 0);
+        boolean res = mesibo.setDatabase("callapp.db");
         mesibo.addListener(this);
         Mesibo.start();
 
@@ -62,10 +67,7 @@ public class MainActivity extends AppCompatActivity implements Mesibo.Connection
         String destination =  "destination";
 
         /* set profile so that it is visible in call screen */
-        Mesibo.UserProfile u = new Mesibo.UserProfile();
-        u.name = "Mabel Bay";
-        u.address = destination;
-        Mesibo.setUserProfile(u, false);
+        MesiboProfile u = Mesibo.getProfile(destination);
 
         FloatingActionButton fab_v = (FloatingActionButton) findViewById(R.id.fab_videocall);
         fab_v.setOnClickListener(new View.OnClickListener() {
@@ -87,9 +89,7 @@ public class MainActivity extends AppCompatActivity implements Mesibo.Connection
         fab_m.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Mesibo.MessageParams params = new Mesibo.MessageParams();
-                params.peer = destination;
-                Mesibo.sendMessage(params, Mesibo.random(), "Hello from mesibo calls");
+
             }
         });
     }
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements Mesibo.Connection
     }
 
     @Override
-    public MesiboCall.CallProperties MesiboCall_OnIncoming(Mesibo.UserProfile profile, boolean video) {
+    public MesiboCall.CallProperties MesiboCall_OnIncoming(@NonNull  MesiboProfile profile, boolean video, boolean waiting) {
         MesiboCall.CallProperties cc = MesiboCall.getInstance().createCallProperties(video);
         cc.parent = getApplicationContext();
         cc.user = profile;
@@ -128,10 +128,8 @@ public class MainActivity extends AppCompatActivity implements Mesibo.Connection
 
     }
 
-
     @Override
-    public boolean MesiboCall_onNotify(int type, Mesibo.UserProfile profile, boolean video) {
+    public boolean MesiboCall_onNotify(int type, @NonNull MesiboProfile mesiboProfile, boolean b, @NonNull MesiboDateTime mesiboDateTime) {
         return false;
     }
-
 }
