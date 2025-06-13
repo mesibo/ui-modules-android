@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -39,7 +39,8 @@ public class MessageData {
 
     private boolean mFavourite = false;
 
-    private boolean mShowName = true;
+    private boolean mShowName = false;
+    private boolean mExtraSpace = false;
 
     private MesiboRecycleViewHolder mViewHolder = null;
     private int mNameColor = 0xff777777;
@@ -59,7 +60,7 @@ public class MessageData {
         this.mContext = context;
         if(msg.isDate()) {
             MesiboUiDefaults opts = MesiboUI.getUiDefaults();
-            msg.message = msg.getTimestamp().getDate(opts.showMonthFirst, opts.today, opts.yesterday);
+            msg.message = msg.getTimestamp().getDate(opts.showMonthFirst, opts.today, opts.yesterday, false);
         }
     }
 
@@ -79,6 +80,10 @@ public class MessageData {
 
         mViewHolder = vh;
 
+    }
+
+    protected void updateMesiboMessage(MesiboMessage m) {
+        this.msg = m;
     }
 
     public MesiboMessage getMesiboMessage() {
@@ -110,6 +115,10 @@ public class MessageData {
 
     public boolean isForwarded() {
         return msg.isForwarded();
+    }
+
+    public boolean isModified() {
+        return msg.isModified();
     }
 
     public boolean isSelected() {
@@ -263,7 +272,7 @@ public class MessageData {
     public String getDateStamp() {
         MesiboUiDefaults opts = MesiboUI.getUiDefaults();
         MesiboDateTime d = msg.getTimestamp();
-        return d.getDate(true, opts.today, opts.yesterday);
+        return d.getDate(true, opts.today, opts.yesterday, false);
     }
 
     public void setStaus(int status) {
@@ -319,7 +328,51 @@ public class MessageData {
         return mNameColor;
     }
 
-    public void checkPreviousData(MessageData pd) {
+    protected void checkExtraSpace(MessageData pd) {
+        if(msg.isMessage() != pd.msg.isMessage()) {
+            mExtraSpace = true;
+            return;
+        }
+
+        if(msg.isOutgoing() != pd.getMesiboMessage().isOutgoing()) {
+            mExtraSpace = true;
+            return;
+        }
+
+        if(msg.isIncoming() != pd.getMesiboMessage().isIncoming()) {
+            mExtraSpace = true;
+            return;
+        }
+
+        if(msg.hasThumbnail() || pd.getMesiboMessage().hasThumbnail()) {
+            mExtraSpace = true;
+            return;
+        }
+
+        if(msg.hasLocation() || pd.getMesiboMessage().hasLocation()) {
+            mExtraSpace = true;
+            return;
+        }
+
+        String prevPeer = pd.getPeer();
+        // TBD, any message after outgoingMessage must have mShowName enabked.
+        // check if prevPeer is different for outgoing message
+        if(msg.isIncoming() && msg.isGroupMessage() && null != prevPeer && null != msg.peer && !prevPeer.equalsIgnoreCase(msg.peer)) {
+            mExtraSpace = true;
+            return;
+        }
+
+        mExtraSpace = false;
+
+        if(msg.isGroupMessage())
+            mExtraSpace = mShowName; // if showing name, give space (redundant)
+    }
+
+    public boolean hasExtraSpace() {
+        return mExtraSpace;
+    }
+
+    protected void checkPreviousData(MessageData pd) {
         if(msg.isOutgoing() || !msg.isGroupMessage()) {
             mShowName = false;
             return;

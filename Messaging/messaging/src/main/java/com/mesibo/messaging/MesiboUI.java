@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -56,6 +57,18 @@ public class MesiboUI {
         public ViewOnClickListener(MesiboScreen scr) {
             this.screen = scr;
         }
+    }
+
+    public static class MesiboMessageScreenControls {
+        public EditText editText = null;
+        public ImageButton cameraButton = null;
+        public ImageButton imageButton = null;
+        public ImageButton videoButton = null;
+        public ImageButton audioButton = null;
+        public ImageButton fileButton = null;
+        public ImageButton locationButton = null;
+        public ImageButton attachButton = null;
+        public ImageButton sendButton = null;
     }
 
     public static class MesiboScreenOptions {
@@ -88,7 +101,8 @@ public class MesiboUI {
     public static class MesiboMessageScreen extends MesiboScreen {
         public MesiboProfile profile  = null;
         public ImageView profileImage = null;
-        public EditText editText = null;
+
+        public MesiboMessageScreenControls controls = new MesiboMessageScreenControls();
     }
 
     public static class MesiboRow {
@@ -158,6 +172,9 @@ public class MesiboUI {
         }
     }
 
+    public static int MESIBO_DEFAULTICON_MESSAGE = R.drawable.ic_message_white_24dp;
+    public static String MESIBO_ICONRESOURCE_MESSAGE = "@drawable/ic_message_white_24dp";
+
     //public static final String BUNDLE = "bundle";
     public static final String MESSAGE_ID = "mid";
     public static final String GROUP_ID = "groupid";
@@ -216,6 +233,10 @@ public class MesiboUI {
 
     public static void showEndToEndEncryptionInfoForSelf(Context context) {
         MesiboUIManager.showEndToEndEncryptionInfo(context, null, 0);
+    }
+
+    public static void showBasicProfileInfo(Context context, MesiboProfile profile) {
+        MesiboUIManager.showBasicProfileInfo(context, profile);
     }
 
     public static String version() {

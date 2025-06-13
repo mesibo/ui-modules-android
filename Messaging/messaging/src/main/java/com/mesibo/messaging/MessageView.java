@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -26,6 +26,7 @@ package com.mesibo.messaging;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -51,6 +52,8 @@ import static com.mesibo.messaging.MesiboConfiguration.NORMAL_INCOMING_MESSAGE_D
 import static com.mesibo.messaging.MesiboConfiguration.NORMAL_OUTGOING_MESSAGE_DATE_SPACE;
 import static com.mesibo.messaging.MesiboConfiguration.TOPIC_TEXT_COLOR_WITHOUT_PICTURE;
 import static com.mesibo.messaging.MesiboConfiguration.TOPIC_TEXT_COLOR_WITH_PICTURE;
+
+import androidx.annotation.RequiresApi;
 
 public class MessageView extends RelativeLayout {
 
@@ -88,6 +91,14 @@ public class MessageView extends RelativeLayout {
         init();
 
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public MessageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        mInflater = LayoutInflater.from(context);
+        init();
+    }
+
 
     public MessageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -221,7 +232,6 @@ public class MessageView extends RelativeLayout {
 
             thumbnailParams.width = mThumbailWidth;
 
-
             thumbnailParams.height = (mThumbailWidth*thumbnail.getHeight())/thumbnail.getWidth();
 
             if(!mData.hasThumbnail() || (!mData.isImageVideo() && thumbnail.getWidth() < 200 && thumbnail.getHeight() < 200)) {
@@ -277,7 +287,12 @@ public class MessageView extends RelativeLayout {
         if(mData.isForwarded() && !TextUtils.isEmpty(MesiboUI.getUiDefaults().forwardedTitle)) {
             mHeadingView.setVisibility(VISIBLE);
             mHeadingView.setText(MesiboUI.getUiDefaults().forwardedTitle);
-        } else {
+        }
+        else if(mData.isModified() && !TextUtils.isEmpty(MesiboUI.getUiDefaults().editedTitle)) {
+            mHeadingView.setVisibility(VISIBLE);
+            mHeadingView.setText(MesiboUI.getUiDefaults().editedTitle);
+        }
+        else {
             mHeadingView.setVisibility(GONE);
         }
 

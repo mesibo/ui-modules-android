@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *

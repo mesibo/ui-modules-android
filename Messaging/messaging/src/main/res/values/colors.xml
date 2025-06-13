@@ -62,10 +62,14 @@
     <!--orange-->
 
     <!--deep orange-->
+    <color name="md_orange_500">#FF9800</color>
+    <color name="md_orange_900">#E65100</color>
 
     <!--brown -->
 
     <!--grey-->
+    <color name="md_grey_300">#E0E0E0</color>
+    <color name="md_grey_400">#BDBDBD</color>
     <color name="md_grey_500">#9E9E9E</color>
     <color name="md_grey_600">#757575</color>
     <color name="md_grey_700">#616161</color>

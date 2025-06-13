@@ -3,6 +3,9 @@
     package="com.mesibo.messaging">
 
 
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -31,6 +34,11 @@
         <activity
             android:name=".MesiboMapActivity"
             android:theme="@style/MesiboAppTheme" />
+
+        <activity
+            android:name=".MesiboShowProfileActivity"
+            android:theme="@style/MesiboAppTheme" />
+
 
     </application>
 

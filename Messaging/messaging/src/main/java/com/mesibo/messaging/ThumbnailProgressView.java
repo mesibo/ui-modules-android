@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -42,6 +42,8 @@ import com.mesibo.messaging.AllUtils.MyTrace;
 import static com.mesibo.messaging.MesiboConfiguration.PROGRESSVIEW_DOWNLOAD_SYMBOL;
 import static com.mesibo.messaging.MesiboConfiguration.PROGRESSVIEW_UPLOAD_SYMBOL;
 
+import androidx.annotation.RequiresApi;
+
 public class ThumbnailProgressView extends FrameLayout  {
     private int mCurrentState=-1;
     LayoutInflater mInflater=null;
@@ -65,6 +67,14 @@ public class ThumbnailProgressView extends FrameLayout  {
         init();
 
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public ThumbnailProgressView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        mInflater = LayoutInflater.from(context);
+        init();
+    }
+
     public ThumbnailProgressView(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);

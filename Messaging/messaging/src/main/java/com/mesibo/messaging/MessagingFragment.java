@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -24,6 +24,7 @@
 
 package com.mesibo.messaging;
 import static com.mesibo.api.Mesibo.MSGSTATUS_HEADER;
+import static com.mesibo.api.Mesibo.RESULT_RATELIMIT;
 import static com.mesibo.api.MesiboMessage.TYPE_IMAGE;
 import static com.mesibo.api.MesiboMessage.TYPE_LOCATION;
 import static com.mesibo.messaging.MesiboConfiguration.COPY_STRING;
@@ -50,6 +51,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -207,7 +209,9 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
     private EmojiconEditText mEmojiEditText;
 
     private MessageData mReplyMessage = null;
+    private MessageData mEditMessage = null;
     private Boolean mReplyEnabled = false;
+    private Boolean mEditEnabled = false;
 
     private MesiboUiDefaults mMesiboUIOptions = null ;
 
@@ -217,6 +221,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
     private int mNonDeliveredCount = 0;
 
     private boolean mSelectionMode = false;
+    private boolean mForeground = false;
 
 
     public static final int MESIBO_MESSAGECONTEXTACTION_FORWARD = 1;
@@ -225,6 +230,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
     public static final int MESIBO_MESSAGECONTEXTACTION_DELETE = 8;
     public static final int MESIBO_MESSAGECONTEXTACTION_COPY = 0x10;
     public static final int MESIBO_MESSAGECONTEXTACTION_FAVORITE = 0x20;
+    public static final int MESIBO_MESSAGECONTEXTACTION_EDIT = 0x40;
 
     private MesiboRecycleViewHolder mHeaderView = null;
 
@@ -240,6 +246,10 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
     private MesiboMapScreenshot mMapScreenshot = new MesiboMapScreenshot();
     private MesiboUI.MesiboMessageScreen mScreen = new MesiboUI.MesiboMessageScreen();
     public MesiboUI.MesiboMessageScreenOptions mOpts = null;
+
+    private int mLastScrollPosition = 0;
+    private long mScrollDragTime = 0;
+    private long mScrollIdleTime = 0;
 
     public int getLayout() {
         if(MesiboUI.getUiDefaults().mMessagingFragmentLayout != 0)
@@ -286,7 +296,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
         if(null != mUser && mUser.isGroup()) {
             mLetterTitler = new LetterTileProvider(getActivity(), 60, null);
             if(null != mUser) {
-                mGroupStatus = mUser.getStatus();
+                mGroupStatus = mUser.getString("status", "");
             }
         }
 
@@ -301,7 +311,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
         mUser.addListener(this);
         setHasOptionsMenu(true);
 
-        mUser.getImagePath(); // just to get image in advance
+        mUser.getImage().getImagePath(); // just to get image in advance
 
         mPresence = mUser.newPresence();
 
@@ -321,6 +331,25 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
 
         mAdapter = new MessageAdapter(mScreen, this, mMessageList, this, getListener());
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING ){
+                    mScrollDragTime = Mesibo.getTimestamp();
+                    mLastScrollPosition = 0;
+                }
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE){
+                    LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
+                    mScrollIdleTime = Mesibo.getTimestamp();
+                    //mScrollPosition = llm.findFirstVisibleItemPosition();
+                    mLastScrollPosition = llm.findLastVisibleItemPosition();
+                }
+            }
+        });
+
 
         ib_cam = (ImageButton) view.findViewById(R.id.cameraButton);
 
@@ -409,29 +438,32 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
             ib_showattach.setVisibility(View.GONE);
         }
 
+        mScreen.controls.editText = mEmojiEditText;
+        mScreen.controls.attachButton = ib_showattach;
+        mScreen.controls.sendButton = ib_send;
+        mScreen.controls.cameraButton = ib_cam;
+        mScreen.controls.imageButton = ib_gallery;
+        mScreen.controls.fileButton = ib_upload;
+        mScreen.controls.locationButton = ib_location;
+        mScreen.controls.videoButton = ib_video;
+        mScreen.controls.audioButton = ib_audio;
+
         MesiboImages.init(getActivity());
 
         mEmojiMap = TextToEmoji.getEmojimap();
 
         mName = mUserData.getUserName();
-
         Mesibo.addListener(this);
-        mMesiboUIOptions = MesiboUI.getUiDefaults();
 
         mBottomLayout = view.findViewById(R.id.bottomlayout);
 
         mMessageViewBackgroundImage = (RelativeLayout) view.findViewById(R.id.chat_layout);
         if(null != mMesiboUIOptions.messagingBackground) {
             Drawable drawable = new BitmapDrawable(getResources(),mMesiboUIOptions.messagingBackground);
-            if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
                 mMessageViewBackgroundImage.setBackground(drawable);
-            } else {
-                mMessageViewBackgroundImage.setBackgroundDrawable(drawable);
-            }
         }
 
         mReplyLayout = (RelativeLayout) view.findViewById(R.id.reply_layout);
-
         mReplyCancel = (ImageView) view.findViewById(R.id.reply_cancel);
         mReplyCancel.setVisibility(View.VISIBLE);
         mReplyCancel.setOnClickListener(new OnClickListener() {
@@ -439,12 +471,11 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
             public void onClick(View v) {
                 mReplyLayout.setVisibility(View.GONE);
                 mReplyEnabled = false;
+                mEditEnabled = false;
             }
         });
 
-
         mReplyLayout.setVisibility(View.GONE);
-
         mReplyImage = (ImageView) view.findViewById(R.id.reply_image);
 
         mReplyName = (TextView) view.findViewById(R.id.reply_name);
@@ -593,10 +624,21 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
         return view;
     }
 
+    private int getCurrentItemPosition(){
+        return ((LinearLayoutManager)mRecyclerView.getLayoutManager())
+                .findFirstVisibleItemPosition();
+    }
+
+    private int getCurrentItem(){
+        return ((LinearLayoutManager)mRecyclerView.getLayoutManager())
+                .findFirstVisibleItemPosition();
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         mScreen.menu = menu;
+
         if(getListener() == null)
             return ;
         getListener().MesiboUI_onInitScreen(mScreen);
@@ -629,6 +671,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
 
 
         super.onStop();
+        mForeground = false;
 
     }
 
@@ -638,6 +681,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
             mReadSession.stop();
 
         super.onDestroy();
+        mForeground = false;
     }
 
     @Override
@@ -648,6 +692,8 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
         if(null == activity || null == mOpts) {
             return;
         }
+
+        mForeground = true;
 
         Utils.showServicesSuspendedAlert(activity);
 
@@ -706,7 +752,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
         if(!mUser.isGroup())
             mPresence.sendJoined();
         else
-            mGroupStatus = mUser.getStatus();
+            mGroupStatus = mUser.getString("status", "");
 
 
         if(!TextUtils.isEmpty(mGroupStatus))
@@ -719,6 +765,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
     @Override
     public void onPause() {
         super.onPause();
+        mForeground = false;
 
         if(null != mEmojiEditText)
             mUser.draft = mEmojiEditText.getText().toString();
@@ -802,7 +849,13 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
 
         List<String> permissions = new ArrayList<>();
         if (mMediaButtonClicked != R.id.location) {
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
+                permissions.add(Manifest.permission.READ_MEDIA_AUDIO);
+                permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
+            } else {
+            	permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+	    }
         }
 
         if (mMediaButtonClicked == R.id.cameraButton || mMediaButtonClicked == R.id.video) {
@@ -989,7 +1042,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
     }
 
     @Override
-    public void Mesibo_onSync(int count) {
+    public void Mesibo_onSync(MesiboReadSession session, int count) {
         final int c = count;
         if(count > 0) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -1040,7 +1093,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
         }
 
         MesiboMessage p = mMessageList.get(mMessageOffset).getMesiboMessage();
-        if(p.isDate() && p.date.daysElapsed == m.date.daysElapsed) {
+        if(p.isDate() && p.date.getDaysElapsed() == m.date.getDaysElapsed()) {
             mMessageList.remove(mMessageOffset);
             return true;
         }
@@ -1075,7 +1128,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
             p = mMessageList.get(n).getMesiboMessage();
         }
 
-        if(null != p && p.date.daysElapsed == m.date.daysElapsed)
+        if(null != p && p.date.getDaysElapsed() == m.date.getDaysElapsed())
             return false;
 
         addTimestampToList(m);
@@ -1087,6 +1140,25 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
     }
 
 
+    private Toast mToast = null;
+    public void showToast (String message) {
+        if(null == mToast)
+            mToast = Toast.makeText(myActivity(), message, Toast.LENGTH_SHORT);
+
+        try{
+            // true if visible
+            if(mToast.getView().isShown()) {
+                mToast.setText(message);
+                return;
+            }
+        } catch (Exception e) {         // invisible if exception
+
+        }
+        mToast.show();  //finally display it
+    }
+
+    private long mToastTime = 0;
+    private long mScrollByNewMessageTime = 0;
     private void addMessage(MesiboMessage m) {
         MessageData data = new MessageData(myActivity(), m);
 
@@ -1116,9 +1188,31 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
             if(m.isEndToEndEncryptionStatus())
                 return;
 
+            LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
+
+            if(mScrollDragTime > 0 && mScrollIdleTime > 0 && mScrollIdleTime > mScrollDragTime && 0 == mLastScrollPosition) {
+                mLastScrollPosition = llm.findLastVisibleItemPosition();
+            }
+
+            int offset = 3;
+            long ts = Mesibo.getTimestamp();
+            if(mScrollDragTime > 0 && mScrollIdleTime > 0 && mScrollDragTime > mScrollByNewMessageTime && (mScrollDragTime > mScrollIdleTime || (mMessageList.size() - mLastScrollPosition) > offset) && !mMesiboUIOptions.forceScrollToLatest) {
+                if(m.isIncoming() && mForeground && (ts - mToastTime) > 5000 && !TextUtils.isEmpty(mMesiboUIOptions.messageAlertOnScrolledView)) {
+                    Toast.makeText(myActivity(), mMesiboUIOptions.messageAlertOnScrolledView, Toast.LENGTH_SHORT).show();
+                    mToastTime = ts;
+                }
+                return;
+            }
+
+            // the following will also make onScroll handler called with IDLE state
+            mToastTime = 0;
+            if((ts - mScrollByNewMessageTime) < 500){
+                mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+            } else {
             mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
         }
-
+            mScrollByNewMessageTime = ts;
+        }
     }
 
     MessageData findMessage(long id) {
@@ -1213,7 +1307,17 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
 
         // Mesibo.log("Mesibo_onMessageUpdate: fragment");
         // TBD fixed
-        if(null == m) return;
+        if(null == m) {
+            Mesibo_onMessage(msg); // added on Dec 11, 2023
+            return;
+        }
+
+        m.updateMesiboMessage(msg);
+
+        if(msg.hasFile() || msg.hasImage()) {
+            Log.e(TAG, "Has file");
+        }
+
         if(msg.isFileTransferInProgress()) {
             MessageViewHolder vh = (MessageViewHolder) m.getViewHolder();
             if(null != vh) {
@@ -1375,6 +1479,11 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
     }
 
     @Override
+    public void MesiboProfile_onPublish(MesiboProfile mesiboProfile, boolean b) {
+
+    }
+
+    @Override
     public void MesiboProfile_onEndToEndEncryption(MesiboProfile mesiboProfile, int status) {
     }
 
@@ -1421,6 +1530,28 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
         sendFile(type, caption, filePath, bmp, result);
     }
 
+    private void sendMessage(MesiboMessage m) {
+        if(mReplyEnabled && null != mReplyMessage)
+            m.refid = mReplyMessage.getMid();
+        else if(mEditEnabled && null != mEditMessage) {
+            m.mid = mEditMessage.getMid();
+            m.enableModify(true);
+        }
+
+        boolean sendEdit = mEditEnabled;
+        mReplyEnabled = false;
+        mEditEnabled = false;
+        mReplyLayout.setVisibility(View.GONE);
+        m.setUiContext(getActivity());
+        int rv = 0;
+        if(sendEdit) rv = m.sendUpdate();
+        else rv = m.send();
+
+        if(RESULT_RATELIMIT == rv && !TextUtils.isEmpty(mMesiboUIOptions.sendLimitReached)) {
+            Utils.showAlert(getActivity(), mMesiboUIOptions.sendLimitReachedTitle, mMesiboUIOptions.sendLimitReached);
+        }
+    }
+
     private void sendFile(int type, String caption, String filePath, Bitmap bmp, int result) {
         if(0 != result)
             return;
@@ -1431,13 +1562,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
             m.setContent(bmp);
         else m.setContent(filePath);
         m.message = caption;
-        if(mReplyEnabled && null != mReplyMessage)
-            m.refid = mReplyMessage.getMid();
-
-        mReplyEnabled = false;
-        mReplyLayout.setVisibility(View.GONE);
-        m.setUiContext(getActivity());
-        m.send();
+        sendMessage(m);
     }
 
 
@@ -1496,6 +1621,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
         if (!mSelectionMode) {
             mActionMode = ((AppCompatActivity)getActivity()).startSupportActionMode(mActionModeCallback);
             mSelectionMode = true;
+            Utils.setActionModeBackgroundColor(mActionMode, MesiboUI.getUiDefaults().mActionbarColor);
         }
 
         toggleSelection(position);
@@ -1531,12 +1657,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
 
         MesiboMessage msg = mUser.newMessage();
         msg.message = newText;
-        if(mReplyEnabled && null != mReplyMessage)
-            msg.refid = mReplyMessage.getMid();
-        mReplyEnabled = false;
-        mReplyLayout.setVisibility(View.GONE);
-        msg.setUiContext(getActivity());
-        msg.send();
+        sendMessage(msg);
 
         mEmojiEditText.getText().clear();
         //et.clearFocus();
@@ -1729,14 +1850,8 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
             msg.longitude = li.lon;
             msg.setContentType(TYPE_LOCATION); // not required, for old versions
             msg.setThumbnail(li.image);
-            msg.setUiContext(getActivity());
 
-            if(mReplyEnabled && null != mReplyMessage)
-                msg.refid = mReplyMessage.getMid();
-
-            mReplyEnabled = false;
-            mReplyLayout.setVisibility(View.GONE);
-            msg.send();
+            sendMessage(msg);
             return true;
         }
 
@@ -1796,6 +1911,8 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
 
         if(selection.size() == 1) {
             enabled |= MESIBO_MESSAGECONTEXTACTION_COPY | MESIBO_MESSAGECONTEXTACTION_REPLY;
+            if(MesiboUI.getUiDefaults().enableEdit && mMessageList.get(selection.get(0)).getMesiboMessage().mayBeRetracted())
+                enabled |= MESIBO_MESSAGECONTEXTACTION_EDIT;
         }
 
         return enabled;
@@ -1813,7 +1930,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
 
             for (Integer i : selection) {
                 MessageData m = mMessageList.get(i);
-                if(m.getStatus() > Mesibo.MSGSTATUS_READ || m.isDeleted() || ((Mesibo.getTimestamp() - m.getMesiboMessage().ts)/1000) > maxDeleteInterval) {
+                if(!m.getMesiboMessage().mayBeRetracted()) {
                     deleteRemote = false;
                     break;
                 }
@@ -1930,6 +2047,33 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
                 mReplyLayout.setVisibility(View.VISIBLE);
                 break;
             }
+
+            return true;
+        }
+
+        if (MESIBO_MESSAGECONTEXTACTION_EDIT == item) {
+
+            List<Integer> selection = mAdapter.getSelectedItems();
+            mAdapter.clearSelections();
+            if(selection.size() != 1)
+                return true;
+            mEditEnabled = true;
+
+            mEditMessage = mMessageList.get(selection.get(0));
+            String username = MesiboUI.getUiDefaults().editTitle;
+
+            mReplyName.setTextColor(mEditMessage.getNameColor());
+            mReplyName.setText(username);
+            mReplyText.setText(mEditMessage.getDisplayMessage());
+            mReplyImage.setVisibility(View.GONE);
+            Bitmap image = mEditMessage.getImage();
+
+            if(image != null) {
+                mReplyImage.setVisibility(View.VISIBLE);
+                mReplyImage.setImageBitmap(image);
+            }
+
+            mReplyLayout.setVisibility(View.VISIBLE);
 
             return true;
         }
@@ -2074,6 +2218,10 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
             menu.findItem(R.id.menu_forward).setEnabled(mMesiboUIOptions.enableForward);
             menu.findItem(R.id.menu_remove).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
+            menu.findItem(R.id.menu_edit).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menu.findItem(R.id.menu_edit).setVisible(mMesiboUIOptions.enableEdit);
+            menu.findItem(R.id.menu_edit).setEnabled(mMesiboUIOptions.enableEdit);
+
             menu.findItem(R.id.menu_reply).setVisible(true);
             return true;
         }
@@ -2086,6 +2234,7 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
             menu.findItem(R.id.menu_resend).setVisible((enabled&MessagingFragment.MESIBO_MESSAGECONTEXTACTION_RESEND) > 0);
             menu.findItem(R.id.menu_copy).setVisible((enabled&MessagingFragment.MESIBO_MESSAGECONTEXTACTION_COPY) > 0);
             menu.findItem(R.id.menu_reply).setVisible((enabled&MessagingFragment.MESIBO_MESSAGECONTEXTACTION_REPLY) > 0);
+            menu.findItem(R.id.menu_edit).setVisible((enabled&MessagingFragment.MESIBO_MESSAGECONTEXTACTION_EDIT) > 0);
             return true;
         }
 
@@ -2108,6 +2257,8 @@ public class MessagingFragment extends BaseFragment implements Mesibo.MessageLis
                 mesiboItemId = MessagingFragment.MESIBO_MESSAGECONTEXTACTION_FAVORITE;
             } else if (item.getItemId() == R.id.menu_reply) {
                 mesiboItemId = MessagingFragment.MESIBO_MESSAGECONTEXTACTION_REPLY;
+            } else if (item.getItemId() == R.id.menu_edit) {
+                mesiboItemId = MessagingFragment.MESIBO_MESSAGECONTEXTACTION_EDIT;
             }
 
             if(mesiboItemId > 0) {

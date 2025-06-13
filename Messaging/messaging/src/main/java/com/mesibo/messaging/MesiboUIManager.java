@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.mesibo.api.Mesibo;
+import com.mesibo.api.MesiboProfile;
 import com.mesibo.mediapicker.MediaPicker;
 
 import java.lang.ref.WeakReference;
@@ -105,6 +106,12 @@ public class MesiboUIManager {
         context.startActivity(intent);
     }
 
+    public static void showBasicProfileInfo(Context context, MesiboProfile profile) {
+        Intent intent = new Intent(context, MesiboShowProfileActivity.class);
+        intent.putExtra(MesiboUI.PEER, profile.getAddress());
+        intent.putExtra(MesiboUI.GROUP_ID, profile.getGroupId());
+        context.startActivity(intent);
+    }
 
     public static void launchGroupActivity(Context context, long groupid) {
         Intent intent = new Intent(context, CreateNewGroupActivity.class);
@@ -116,7 +123,7 @@ public class MesiboUIManager {
     public static void launchPictureActivity(Context context, String title, String filePath) {
         if(null == context) return;
 
-        MediaPicker.launchImageViewer((AppCompatActivity) context, filePath);
+        MediaPicker.launchImageViewer((AppCompatActivity) context, filePath, title);
         //MediaPicker.launchImageViewer((AppCompatActivity)context, filePath);
 
     }

@@ -37,7 +37,7 @@
         android:layout_height="130dp"
         android:id="@+id/progressBar"
         android:layout_below="@+id/textView"
-        android:layout_gravity="center"
+        android:layout_gravity="bottom|left"
         android:progress="0"
         android:max="100"
         android:useLevel="true"

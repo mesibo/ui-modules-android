@@ -27,6 +27,13 @@
         android:title="Resend" />
 
     <item
+        android:id="@+id/menu_edit"
+        android:icon="@drawable/ic_edit_white"
+        app:showAsAction="always"
+        android:orderInCategory="0"
+        android:title="Edit" />
+
+    <item
         android:id="@+id/menu_remove"
         android:icon="@drawable/ic_delete_white_24dp"
         app:showAsAction="always"

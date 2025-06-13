@@ -5,6 +5,23 @@
     xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <LinearLayout
+        android:id="@+id/incoming_layout_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="0dp"
+        android:layout_margin="0dp"
+        android:layout_alignParentLeft="true"
+        >
+    <View
+        android:id="@+id/message_gap"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:visibility="gone"
+        >
+    </View>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/incoming_layout_bubble"
         android:layout_width="wrap_content"
@@ -28,7 +45,7 @@
                 android:id="@+id/m_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="James Bond"
+                android:text="mesibo user name"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginBottom="-5dp"
@@ -37,7 +54,6 @@
                 android:textStyle="bold"
                 android:textSize="15sp"
                 android:visibility="visible"
-
                 />
             <com.mesibo.messaging.MessageView
                 android:id="@+id/mesibo_message_view"
@@ -52,6 +68,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/m_status_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -93,7 +110,7 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
+    </LinearLayout>
 
     <View
         android:id="@+id/selected_overlay"
@@ -103,6 +120,6 @@
         android:layout_alignParentTop="true"
         android:background="@color/overlaySelection"
         android:visibility="gone"
-        android:layout_alignBottom="@+id/incoming_layout_bubble" />
+        android:layout_alignBottom="@+id/incoming_layout_wrapper" />
 
 </RelativeLayout>

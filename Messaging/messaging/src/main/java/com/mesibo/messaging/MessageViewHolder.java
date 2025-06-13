@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -30,6 +30,7 @@ import androidx.cardview.widget.CardView;
 
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,8 +61,15 @@ public class MessageViewHolder extends MesiboRecycleViewHolder implements View.O
 
     private ClickListener listener;
     private LinearLayout m_titleLayout;
+    private LinearLayout m_statusLayout;
     private boolean mSelected = false;
     private View mView = null;
+    private View mMessageGap = null;
+
+    private static float mDefaultRadius = -1;
+    private static int mDefMsgViewMarginBottom = -1;
+    private static int mDefStatusMarginBottom = -1;
+    private static int mDefUserNameMarginBottom = -1;
 
     public MessageViewHolder(int type, View v, ClickListener listener) {
 
@@ -69,12 +77,15 @@ public class MessageViewHolder extends MesiboRecycleViewHolder implements View.O
         mView = v;
         mData = null;
         //mMessage = (EmojiconTextView ) v.findViewById(R.id.m_message);
+        m_statusLayout = (LinearLayout) v.findViewById(R.id.m_status_layout);
         mTime = (TextView) v.findViewById(R.id.m_time);
         mStatus = (ImageView) v.findViewById(R.id.m_status);
         mFavourite = (ImageView) v.findViewById(R.id.m_star);
         m_titleLayout = (LinearLayout) v.findViewById(R.id.m_titlelayout);
 
         mMview = (MessageView) v.findViewById(R.id.mesibo_message_view);
+
+        mMessageGap = v.findViewById(R.id.message_gap);
 
         int bubbleid = R.id.outgoing_layout_bubble;
         if(MSGSTATUS_RECEIVEDREAD == type) {
@@ -99,11 +110,32 @@ public class MessageViewHolder extends MesiboRecycleViewHolder implements View.O
         mData = m;
         mData.setViewHolder(this);
 
+        mMessageGap.setVisibility(mData.hasExtraSpace()?View.VISIBLE:View.GONE);
+
+        // need to check footer also when we use in UI
+        boolean imageOnly = (TextUtils.isEmpty(m.getTitle()) && TextUtils.isEmpty(m.getSubTitle()) && TextUtils.isEmpty(m.getMessage()) && m.hasThumbnail());
+        boolean messageOnly = (TextUtils.isEmpty(m.getTitle()) && TextUtils.isEmpty(m.getSubTitle()) && !TextUtils.isEmpty(m.getMessage()) && !m.hasThumbnail());
+
         if(MSGSTATUS_RECEIVEDREAD == getType()) {
             if (m.getGroupId() != 0 && m.isShowName()) {
                 otherUserName.setVisibility(View.VISIBLE);
                 otherUserName.setTextColor(m.getNameColor());
                 otherUserName.setText(m.getUsername());
+
+                ViewGroup.LayoutParams vlp = otherUserName.getLayoutParams();
+                if (vlp instanceof LinearLayout.LayoutParams) {
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vlp;
+
+                    if(mDefUserNameMarginBottom < 0)
+                        mDefUserNameMarginBottom = lp.bottomMargin;
+
+                    if(m.hasThumbnail())
+                        lp.bottomMargin = 12;
+                    else
+                        lp.bottomMargin = mDefUserNameMarginBottom; // -8 is default because of layout, we are setting again in case viewholder is reused
+                    otherUserName.setLayoutParams(lp);
+                }
+
             } else {
                 otherUserName.setVisibility(View.GONE);
             }
@@ -130,6 +162,23 @@ public class MessageViewHolder extends MesiboRecycleViewHolder implements View.O
             m_titleLayout.setVisibility(View.GONE);
         }
 
+        if(null != m_statusLayout) {
+            ViewGroup.LayoutParams vlp = m_statusLayout.getLayoutParams();
+
+            if (vlp instanceof FrameLayout.LayoutParams) {
+                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) vlp;
+
+                if(mDefStatusMarginBottom < 0)
+                    mDefStatusMarginBottom = lp.bottomMargin;
+
+                if(imageOnly)
+                    lp.bottomMargin = 16;
+                else
+                    lp.bottomMargin = mDefStatusMarginBottom;
+                m_statusLayout.setLayoutParams(lp);
+            }
+        }
+
         mFavourite.setVisibility(m.getFavourite()?View.VISIBLE:View.GONE);
         if((null == mData.getTitle() || mData.getTitle().isEmpty()) && (null == mData.getMessage()
                 || mData.getMessage().isEmpty())) {
@@ -143,6 +192,34 @@ public class MessageViewHolder extends MesiboRecycleViewHolder implements View.O
         mMview.setData(mData);
 
         mSelectedOverlay.setVisibility(selected ? View.VISIBLE : View.INVISIBLE);
+        if(MesiboUI.getUiDefaults().autoAdjustCardRadius && mBubble instanceof CardView) {
+            CardView cv = (CardView) mBubble;
+
+            if(mDefaultRadius < 0)
+                mDefaultRadius = cv.getRadius();
+
+            if(messageOnly && m.getMessage().length() < 32)
+                cv.setRadius(mDefaultRadius*0.8f);
+            else
+                cv.setRadius(mDefaultRadius);
+        }
+
+        if(null != mMview) {
+            ViewGroup.LayoutParams vlp = mMview.getLayoutParams();
+
+            if (vlp instanceof LinearLayout.LayoutParams) {
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vlp;
+
+                if(mDefMsgViewMarginBottom < 0)
+                    mDefMsgViewMarginBottom = lp.bottomMargin;
+
+                if(imageOnly)
+                    lp.bottomMargin = 0;
+                else
+                    lp.bottomMargin = mDefMsgViewMarginBottom; // -8 is default because of layout, we are setting again in case viewholder is reused
+                mMview.setLayoutParams(lp);
+            }
+        }
     }
 
     public void removeData() {

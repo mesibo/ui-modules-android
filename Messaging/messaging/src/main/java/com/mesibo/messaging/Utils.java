@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -29,9 +29,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 
+import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.view.StandaloneActionMode;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
@@ -57,6 +60,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +81,17 @@ public final class Utils {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 window.setStatusBarColor(MesiboUI.getUiDefaults().mStatusbarColor);
             }
+        }
+    }
+
+    public static void setActionModeBackgroundColor(ActionMode actionMode, int color) {
+        try {
+            StandaloneActionMode standaloneActionMode = (StandaloneActionMode) actionMode;
+            Field mContextView = StandaloneActionMode.class.getDeclaredField("mContextView");
+            mContextView.setAccessible(true);
+            Object value = mContextView.get(standaloneActionMode);
+            ((View) value).setBackground(new ColorDrawable(color));
+        } catch (Throwable ignore) {
         }
     }
 

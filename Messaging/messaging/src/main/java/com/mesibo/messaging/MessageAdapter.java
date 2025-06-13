@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -234,9 +234,10 @@ public class MessageAdapter extends SelectableAdapter <RecyclerView.ViewHolder> 
             return;
         }
 
-        if(i > 0 && cm.getGroupId() > 0) {
+        if(i > 0) {
             MessageData prevcm = mChatList.get(i-1);
-            cm.checkPreviousData(prevcm);
+            if(cm.getGroupId() > 0) cm.checkPreviousData(prevcm);
+            cm.checkExtraSpace(prevcm);
         }
 
         if (msg.isInvisible()) {

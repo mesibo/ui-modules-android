@@ -2,7 +2,7 @@
 * By accessing or copying this work, you agree to comply with the following   *
 * terms:                                                                      *
 *                                                                             *
-* Copyright (c) 2019-2024 mesibo                                              *
+* Copyright (c) 2019-present mesibo                                              *
 * https://mesibo.com                                                          *
 * All rights reserved.                                                        *
 *                                                                             *
@@ -176,7 +176,7 @@ public class UserData {
     }
 
     public Bitmap getThumbnail(LetterTileProvider tileProvider) {
-        Bitmap tn = mUser.getThumbnail();
+        Bitmap tn = mUser.getImage().getThumbnail();
         if(null != tn) return tn;
 
         if(null != mUserImageThumbnail)
@@ -199,7 +199,7 @@ public class UserData {
     }
 
     public String getImagePath() {
-        return mUser.getImageOrThumbnailPath();
+        return mUser.getImage().getImageOrThumbnailPath();
     }
 
     public Integer getStatus() {
